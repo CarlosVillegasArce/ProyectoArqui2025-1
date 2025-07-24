@@ -1,0 +1,81 @@
+
+
+// Carga CORRECTA de 0xAB000000 en R1
+//0xE3A014AB  // MOV R1, #0xAB000000 (rotación de 10*2=20 bits)
+
+// Carga CORRECTA de 0x00001300 en R2
+//0xE3A02C13  // MOV R2, #0x00001300 (rotación de 6*2=12 bits)
+
+// Carga de 0x00000041 en R3 (ya correcta)
+//0xE3A03041  // MOV R3, #0x00000041
+// Operaciones ORR (se mantienen igual)
+//0xE1811002  // ORR R1, R1, R2
+//0xE1811003  // ORR R1, R1, R3
+
+
+//TEST PROFE 
+//
+// Configuración inicial
+0xE3A00080  // MOV R0, #128       R0=128
+
+// Carga de valores flotantes (usando técnica de rotación)
+// 0.0f (0x00000000)
+0xE3A01000  // MOV R1, #0          X=0
+
+//Registro R2
+0xE3A02440  // MOV R2, #0x40000000 ; Byte 0x40 en posición 3
+0xE3A0C840  // MOV R12, #0x400000   ; Byte 0x40 en posición 2
+0xE182200C  // ORR R2, R2, R12      ; R2 = 0x40400000 (3.0f)
+
+//Registro R3
+E3A0343D  // MOV R3, #0x3D000000     ; rot = 4, imm = 0x3D
+E3A018CC  // MOV R1, #0x00CC0000     ; rot = 8, imm = 0xCC
+E1833001  //; ORR R3, R3, R1          ; R3 = R3 | R1 → 0x3DCC0000
+E3A01CCC  //; MOV R1, #0x0000CC00     ; rot = 10, imm = 0xCC
+E1833001  //; ORR R3, R3, R1          ; R3 = 0x3DCCCC00
+E3A010CD  //; MOV R1, #0x000000CD     ; rot = 0, imm = 0xCD
+E1833001  //; ORR R3, R3, R1          ; R3 = 0x3DCCCCCD ✅  3.0f
+
+// Registro R4 ← 0xBECCCCCD (-0.4f en IEEE-754)
+E3A044BE  // MOV R4, #0xBE000000     ; rot = 4, imm = 0xBE
+E3A068CC  // MOV R6, #0x00CC0000     ; rot = 8, imm = 0xCC
+E1844006  // ORR R4, R4, R6          ; R4 |= R6 → 0xBECC0000
+E3A06CCC  // MOV R6, #0x0000CC00     ; rot = 10, imm = 0xCC
+E1844006  // ORR R4, R4, R6          ; R4 |= R6 → 0xBECCCC00
+E3A060CD  // MOV R6, #0x000000CD     ; rot = 0, imm = 0xCD
+E1844006  // ORR R4, R4, R6          ; R4 = 0xBECCCCCD ✅  -0.4f
+
+
+
+//FMUL 
+E1C37004
+
+//FADD
+E1637004
+
+// Registro R5 
+//E3A0543D  // MOV R5, #0x3D000000     ; rot = 4, imm = 0x3D
+//E3A098CC  // MOV R9, #0x00CC0000     ; rot = 8, imm = 0xCC
+//E1855009  // ORR R5, R5, R9          ; R5 = R5 | R9 → 0x3DCC0000
+//E3A09CCC  // MOV R9, #0x0000CC00     ; rot = 10, imm = 0xCC
+//E1855009  // ORR R5, R5, R9          ; R5 = 0x3DCCCC00
+//E3A090CD  // MOV R9, #0x000000CD     ; rot = 0, imm = 0xCD
+//E1855009  // ORR R5, R5, R9          ; R5 = 0x3DCCCCCD ✅ 0.1f
+
+
+//E1637005 // FPADD R7, R2,R5
+//E1C38005 // FPMUL R8,R2,R5
+//E1C36002 // FPMUL R6,R3,R2
+0xE1A06002   // MOV R6, R2              ; R6 = dx
+0xE1C06003   // FMUL R6, R6, R3         ; R6 = dt * dx
+0xE1A07001   // MOV R7, R1              ; R7 = x
+0xE1C07004   // FMUL R7, R7, R4         ; R7 = a * x
+0xE1A08002   // MOV R8, R2              ; R8 = dx
+0xE1C08005   // FMUL R8, R8, R5         ; R8 = b * dx
+0xE1607008   // FADD R7, R7, R8         ; R7 = a*x + b*dx
+0xE1C07003   // FMUL R7, R7, R3         ; R7 = dt * (a*x + b*dx)
+0xE1601006   // FADD R1, R1, R6         ; x = x + dt*dx
+0xE1602007   // FADD R2, R2, R7         ; dx = dx + dt*(a*x + b*dx)
+0xE2400001   // SUB R0, R0, #1
+0xE3500000   // CMP R0, #0
+0x1AFFFFF3   // BNE FOR (salta atrás 13 instrucciones ≈ -0xD)

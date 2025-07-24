@@ -1,0 +1,35 @@
+# compile verilog/system verilog design source files
+verilog xil_defaultlib  --include "../../../../../../../../../../../Xilinx/2025.1/Vivado/data/rsb/busdef" \
+"../../../../project_2.srcs/sources_1/new/AddFP.v" \
+"../../../../project_2.srcs/sources_1/new/HexTo7Segment.v" \
+"../../../../project_2.srcs/sources_1/new/MulFP.v" \
+"../../../../project_2.srcs/sources_1/new/alu.v" \
+"../../../../project_2.srcs/sources_1/new/arm.v" \
+"../../../../project_2.srcs/sources_1/new/clock_divider.v" \
+"../../../../project_2.srcs/sources_1/new/clock_divider2.v" \
+"../../../../project_2.srcs/sources_1/new/condcheck.v" \
+"../../../../project_2.srcs/sources_1/new/condlogic.v" \
+"../../../../project_2.srcs/sources_1/new/controller.v" \
+"../../../../project_2.srcs/sources_1/new/datapath.v" \
+"../../../../project_2.srcs/sources_1/new/decode.v" \
+"../../../../project_2.srcs/sources_1/new/extend.v" \
+"../../../../project_2.srcs/sources_1/new/flop2c.v" \
+"../../../../project_2.srcs/sources_1/new/flopr.v" \
+"../../../../project_2.srcs/sources_1/new/flopr2.v" \
+"../../../../project_2.srcs/sources_1/new/hFSM.v" \
+"../../../../project_2.srcs/sources_1/new/hex_display.v" \
+"../../../../project_2.srcs/sources_1/new/mainfsm.v" \
+"../../../../project_2.srcs/sources_1/new/mem.v" \
+"../../../../project_2.srcs/sources_1/new/mux2.v" \
+"../../../../project_2.srcs/sources_1/new/mux3.v" \
+"../../../../project_2.srcs/sources_1/new/mux4.v" \
+"../../../../project_2.srcs/sources_1/new/mux_s_tamaño1.v" \
+"../../../../project_2.srcs/sources_1/new/regfile.v" \
+"../../../../project_2.srcs/sources_1/new/top.v" \
+"../../../../project_2.srcs/sim_1/new/testbench.v" \
+
+# compile glbl module
+verilog xil_defaultlib "glbl.v"
+
+# Do not sort compile order
+nosort
