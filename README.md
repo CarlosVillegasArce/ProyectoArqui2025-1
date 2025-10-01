@@ -31,11 +31,3 @@ Este proyecto consiste en el desarrollo de un **Procesador Multicycle** personal
 - **Carlos Villegas Arce**
 - **Hanks Vargas**
 
-## 📷 Ejemplo de funcionamiento
-
-*Incluye aquí una imagen si deseas mostrar el display en acción o una captura del waveform/simulación.*
-
----
-
-Si deseas que lo exporte como archivo o le agregue badges, gifs, imágenes o detalles técnicos más avanzados como el diagrama de estados, solo dime y lo actualizo.
-
